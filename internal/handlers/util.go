@@ -2,11 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
-
-	"github.com/gorilla/mux"
 )
 
 type Response struct {
@@ -25,12 +22,26 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	return json.NewEncoder(w).Encode(v)
 }
 
-func getID(r *http.Request) (int64, error) {
-	idStr := mux.Vars(r)["id"]
-	id, err := strconv.Atoi(idStr)
-	id64 := int64(id)
-	if err != nil {
-		return id64, fmt.Errorf("parsing id from path error: `%s` is not a valid id", idStr)
+// GetQueryString pobiera parametr typu string z query lub zwraca domyślną wartość.
+func GetQueryString(r *http.Request, key string, defaultVal string) string {
+	val := r.URL.Query().Get(key)
+	if val == "" {
+		return defaultVal
 	}
-	return id64, nil
+	return val
+}
+
+// GetQueryInt pobiera parametr typu int z query lub zwraca domyślną wartość,
+// jeśli parametr nie istnieje lub nie można go sparsować.
+func GetQueryInt(r *http.Request, key string, defaultVal int) int {
+	val := r.URL.Query().Get(key)
+	if val == "" {
+		return defaultVal
+	}
+
+	i, err := strconv.Atoi(val)
+	if err != nil {
+		return defaultVal
+	}
+	return i
 }

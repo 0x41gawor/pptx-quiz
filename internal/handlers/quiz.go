@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log/slog"
 	"net/http"
 
 	"github.com/0x41gawor/pptx-quiz/internal/service"
@@ -17,8 +16,16 @@ func NewHandlerQuiz() *HandlerQuiz {
 	}
 }
 
-// handles "/quiz" path
+// GET /quiz?howMany=10&lang=pl
 func (h *HandlerQuiz) handleBaseGET(w http.ResponseWriter, r *http.Request) error {
-	slog.Debug("")
-	return WriteJSON(w, http.StatusOK, "quiz handler works")
+	howMany := GetQueryInt(r, "howMany", 10)
+	lang := GetQueryString(r, "lang", "pl")
+
+	// langu musi być albo "pl" albo "en"
+	if lang != "pl" && lang != "en" {
+		lang = "pl"
+	}
+
+	quiz := h.s.Get(lang, howMany)
+	return WriteJSON(w, http.StatusOK, quiz)
 }
