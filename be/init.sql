@@ -7,5 +7,6 @@ CREATE TABLE completions (
     lastname VARCHAR(100) NOT NULL,
     id_passport_number VARCHAR(50),
     company VARCHAR(150),
-    date DATE NOT NULL DEFAULT CURRENT_DATE
+    date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+

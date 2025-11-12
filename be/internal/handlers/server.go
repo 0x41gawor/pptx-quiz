@@ -20,7 +20,10 @@ func (s *Server) Run() {
 	router := mux.NewRouter()
 
 	apiQuiz := NewHandlerQuiz()
+	apiCompletions := NewHandlerCompletions()
 	router.HandleFunc("/api/v1/quiz", makeHTTPHandleFunc(apiQuiz.handleBaseGET)).Methods("GET")
+	router.HandleFunc("/api/v1/completions", makeHTTPHandleFunc(apiCompletions.handleBaseGET)).Methods("GET")
+	router.HandleFunc("/api/v1/completions", makeHTTPHandleFunc(apiCompletions.handleBasePOST)).Methods("POST")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
