@@ -21,7 +21,8 @@ func NewHandlerCompletions() *HandlerCompletions {
 
 // GET /completions
 func (h *HandlerCompletions) handleBaseGET(w http.ResponseWriter, r *http.Request) error {
-	completions, err := h.s.List()
+	query := GetQueryString(r, "query", "")
+	completions, err := h.s.List(query)
 	if err != nil {
 		return WriteJSON(w, http.StatusInternalServerError, "database query failed")
 	}

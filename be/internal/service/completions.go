@@ -1,78 +1,65 @@
 package service
 
 import (
-	"database/sql"
+	"strings"
+	"unicode"
 
 	"github.com/0x41gawor/pptx-quiz/internal/repo"
 	"github.com/0x41gawor/pptx-quiz/internal/service/model"
+	"golang.org/x/text/unicode/norm"
 )
 
 type ServiceCompletions struct {
-	db *sql.DB
+	repo *repo.RepoCompletions
 }
 
 func NewServiceCompletions() *ServiceCompletions {
-	db := repo.GetDatabaseInstance().DB
-	return &ServiceCompletions{db: db}
+	return &ServiceCompletions{
+		repo: repo.NewRepoCompletions(),
+	}
 }
 
-func (s *ServiceCompletions) List() ([]model.Completion, error) {
-	rows, err := s.db.Query(`
-		SELECT id, firstname, lastname, phone_number, date
-		FROM completions
-		ORDER BY date DESC
-	`)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var completions []model.Completion
-
-	for rows.Next() {
-		var c model.Completion
-
-		err := rows.Scan(
-			&c.ID,
-			&c.Firstname,
-			&c.Lastname,
-			&c.PhoneNumber,
-			&c.Date,
-		)
+func (s *ServiceCompletions) List(query string) ([]model.Completion, error) {
+	if query != "" {
+		models, err := s.repo.List()
 		if err != nil {
 			return nil, err
 		}
-
-		completions = append(completions, c)
+		// concatenate models first name and last name and filter by query
+		var filtered []model.Completion
+		for _, m := range models {
+			fullName := m.Firstname + " " + m.Lastname
+			if containsIgnoreCase(fullName, query) {
+				filtered = append(filtered, m)
+			}
+		}
+		return filtered, nil
 	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return completions, nil
+	return s.repo.List()
 }
 
 func (s *ServiceCompletions) Create(c *model.Completion) (*model.Completion, error) {
-	query := `
-		INSERT INTO completions (firstname, lastname, phone_number, date)
-		VALUES ($1, $2, $3, $4)
-		RETURNING id
-	`
+	return s.repo.Create(c)
+}
 
-	var newID int
-	err := s.db.QueryRow(
-		query,
-		c.Firstname,
-		c.Lastname,
-		c.PhoneNumber,
-		c.Date,
-	).Scan(&newID)
+func normalizeASCII(s string) string {
+	// Normalizacja do decomposed form (np. ą -> a +  ̨)
+	t := norm.NFD.String(s)
 
-	if err != nil {
-		return nil, err
+	// Usuwanie wszystkich znaków diakrytycznych typu Mn (mark, nonspacing)
+	b := make([]rune, 0, len(t))
+	for _, r := range t {
+		if unicode.Is(unicode.Mn, r) {
+			continue
+		}
+		b = append(b, unicode.ToLower(r))
 	}
 
-	c.ID = newID
-	return c, nil
+	return string(b)
+}
+
+func containsIgnoreCase(s, substr string) bool {
+	sNorm := normalizeASCII(s)
+	substrNorm := normalizeASCII(substr)
+	return strings.Contains(sNorm, substrNorm)
 }
