@@ -18,7 +18,7 @@ func NewServiceCompletions() *ServiceCompletions {
 
 func (s *ServiceCompletions) List() ([]model.Completion, error) {
 	rows, err := s.db.Query(`
-		SELECT id, firstname, lastname, id_passport_number, company, date
+		SELECT id, firstname, lastname, phone_number, date
 		FROM completions
 		ORDER BY date DESC
 	`)
@@ -31,26 +31,16 @@ func (s *ServiceCompletions) List() ([]model.Completion, error) {
 
 	for rows.Next() {
 		var c model.Completion
-		var idPassportNumber, company sql.NullString
 
 		err := rows.Scan(
 			&c.ID,
 			&c.Firstname,
 			&c.Lastname,
-			&idPassportNumber,
-			&company,
+			&c.PhoneNumber,
 			&c.Date,
 		)
 		if err != nil {
 			return nil, err
-		}
-
-		// Konwersja sql.NullString → *string
-		if idPassportNumber.Valid {
-			c.IDPassportNumber = &idPassportNumber.String
-		}
-		if company.Valid {
-			c.Company = &company.String
 		}
 
 		completions = append(completions, c)
@@ -65,8 +55,8 @@ func (s *ServiceCompletions) List() ([]model.Completion, error) {
 
 func (s *ServiceCompletions) Create(c *model.Completion) (*model.Completion, error) {
 	query := `
-		INSERT INTO completions (firstname, lastname, id_passport_number, company, date)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO completions (firstname, lastname, phone_number, date)
+		VALUES ($1, $2, $3, $4)
 		RETURNING id
 	`
 
@@ -75,8 +65,7 @@ func (s *ServiceCompletions) Create(c *model.Completion) (*model.Completion, err
 		query,
 		c.Firstname,
 		c.Lastname,
-		c.IDPassportNumber,
-		c.Company,
+		c.PhoneNumber,
 		c.Date,
 	).Scan(&newID)
 
