@@ -22,6 +22,8 @@ func (s *Server) Run() {
 	apiQuiz := NewHandlerQuiz()
 	apiCompletions := NewHandlerCompletions()
 	router.HandleFunc("/api/v1/quiz", makeHTTPHandleFunc(apiQuiz.handleBaseGET)).Methods("GET")
+	router.HandleFunc("/api/v1/quiz/file", makeHTTPHandleFunc(apiQuiz.handleFileGET)).Methods("GET")
+	router.HandleFunc("/api/v1/quiz/file", makeHTTPHandleFunc(apiQuiz.handleFilePOST)).Methods("POST")
 	router.HandleFunc("/api/v1/completions", makeHTTPHandleFunc(apiCompletions.handleBaseGET)).Methods("GET")
 	router.HandleFunc("/api/v1/completions", makeHTTPHandleFunc(apiCompletions.handleBasePOST)).Methods("POST")
 

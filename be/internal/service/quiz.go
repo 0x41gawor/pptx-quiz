@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/csv"
+	"io"
 	"log"
 	"math/rand"
 	"os"
@@ -9,10 +10,31 @@ import (
 	"time"
 )
 
-type ServiceQuiz struct{}
+type ServiceQuiz struct {
+	Records [][]string // <-- trzymamy CSV w pamięci
+}
 
 func NewServiceQuiz() *ServiceQuiz {
 	return &ServiceQuiz{}
+}
+
+func (s *ServiceQuiz) LoadCSV(r io.Reader) error {
+	reader := csv.NewReader(r)
+	reader.Comma = ';'
+	reader.FieldsPerRecord = -1
+	reader.LazyQuotes = true
+
+	records, err := reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	if len(records) <= 1 {
+		return io.EOF
+	}
+
+	s.Records = records
+	return nil
 }
 
 type Answer struct {
@@ -29,27 +51,27 @@ type Quiz struct {
 	Questions []Question
 }
 
-func (s *ServiceQuiz) Get(lang string, howMany int) *Quiz {
+func (s *ServiceQuiz) loadDefault() error {
 	file, err := os.Open("data.csv")
 	if err != nil {
-		log.Fatalf("cannot open csv: %v", err)
+		return err
 	}
 	defer file.Close()
 
-	reader := csv.NewReader(file)
-	reader.Comma = ';'
-	reader.FieldsPerRecord = -1
-	reader.LazyQuotes = true
+	return s.LoadCSV(file)
+}
 
-	records, err := reader.ReadAll()
-	if err != nil {
-		log.Fatalf("cannot read csv: %v", err)
+func (s *ServiceQuiz) Get(lang string, howMany int) *Quiz {
+	if len(s.Records) == 0 {
+		log.Println("No CSV loaded by POST — using default data.csv")
+
+		if err := s.loadDefault(); err != nil {
+			log.Printf("Failed to load data.csv: %v", err)
+			return &Quiz{}
+		}
 	}
 
-	if len(records) <= 1 {
-		log.Fatal("no data in csv")
-	}
-
+	records := s.Records
 	rows := records[1:]
 
 	if howMany > len(rows) {
