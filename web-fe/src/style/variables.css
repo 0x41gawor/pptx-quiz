@@ -1,22 +1,18 @@
 :root {
-  /* tło aplikacji tabletowej */
-  --color-bg-main: #0f172a;
-  --color-bg-panel: #111827;
-
-  /* przyciski */
-  --color-primary: #22c55e;
-  --color-primary-hover: #16a34a;
-
-  /* stany odpowiedzi */
-  --color-success: #22c55e;
-  --color-error: #ef4444;
-
-  /* tekst */
-  --color-text-main: #f9fafb;
-  --color-text-muted: #9ca3af;
-
   /* admin panel */
   --color-admin-bg: #f3f4f6;
   --color-admin-card: #ffffff;
   --color-admin-border: #e5e7eb;
+
+  /*brand-colors*/
+  --color-pink-dark: #C81774;
+  --color-pink-light: #FF007F;
+  --color-orange: #FA4F43;
+  --color-dark-bg: #2B2735;
+  --color-green-dark: #00772F;
+  --color-green-light: #00B84D;
+  --color-red-dark: #AA0000;
+  --color-red-light: #FB0000;
+  --color-blue-dark: #004580;
+  --color-blue-light: #006EC7;
 }

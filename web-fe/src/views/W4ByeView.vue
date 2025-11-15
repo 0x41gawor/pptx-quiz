@@ -1,18 +1,23 @@
 <template>
   <div class="bye-view" @click="goHome">
-    <div class="bye-card">
-      <h1>{{ t('bye_title') }}</h1>
-      <p>{{ t('bye_subtitle') }}</p>
+    <div class="bye-content">
+      <h1 class="bye-title">
+        THANK YOU
+      </h1>
+
+      <p class="bye-subtitle">
+        PLEASE GO TO THE<br />
+        RECEPTION FOR FURTHER<br />
+        INSTRUCTIONS
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from '@/i18n/lang'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 
-const { t } = useI18n()
 const router = useRouter()
 
 function goHome() {
@@ -27,15 +32,35 @@ onMounted(() => {
 <style scoped>
 .bye-view {
   min-height: 100vh;
+  width: 100%;
+  background: var(--color-dark-bg);
+
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+
+  padding-left: 10vw; /* przesuniecie jak w mocku */
 }
 
-.bye-card {
-  text-align: center;
-  padding: 2rem 3rem;
-  border-radius: 1.5rem;
-  background: rgba(15, 23, 42, 0.9);
+.bye-content {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.bye-title {
+  font-size: 96px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.bye-subtitle {
+  font-size: 48px;
+  font-weight: 300;
+  color: #ffffff;
+  line-height: 1.35;
+  margin: 0;
 }
 </style>

@@ -1,51 +1,56 @@
 <template>
   <div class="user-data-view">
     <div class="form-card">
-      <h2>{{ t('user_data_title') }}</h2>
 
-      <form @submit.prevent="handleNext">
-        <label>
-          <span>First name / Imię</span>
+      <h2 class="form-title">
+              {{ t('user_data_title').toUpperCase() }}
+      </h2>
+
+      <form @submit.prevent="handleNext" class="form-grid">
+        <div class="row">
+          <label class="label">{{ t('user_data_firstname') }}</label>
           <input v-model="firstname" type="text" required />
-        </label>
+        </div>
 
-        <label>
-          <span>Last name / Nazwisko</span>
+        <div class="row">
+          <label class="label">{{ t('user_data_lastname') }}</label>
           <input v-model="lastname" type="text" required />
-        </label>
+        </div>
 
-        <label>
-          <span>Phone number / Numer telefonu</span>
+        <div class="row">
+          <label class="label">{{ t('user_data_phone_number') }}</label>
           <input v-model="phoneNumber" type="tel" required />
-        </label>
-
-        <div class="actions">
-          <button type="submit" class="primary">
-            {{ t('user_data_next') }}
-          </button>
         </div>
       </form>
     </div>
+
+    <button class="next-btn" @click="handleNext" :disabled="!isValid">
+      {{ t('user_data_next').toUpperCase() }}
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from '@/i18n/lang'
 import { initializeSession } from '@/services/quizService'
 import { quizSession } from '@/stores/quizSession'
 
-const router = useRouter()
 const { t } = useI18n()
-
+const router = useRouter()
 const firstname = ref(quizSession.firstname)
 const lastname = ref(quizSession.lastname)
 const phoneNumber = ref(quizSession.phoneNumber)
 
-async function handleNext() {
+const isValid = computed(() =>
+  firstname.value.trim().length > 0 &&
+  lastname.value.trim().length > 0 &&
+  phoneNumber.value.trim().length > 0
+)
+
+function handleNext() {
   if (!quizSession.language) {
-    // fallback – wróć do wyboru języka
     router.push({ name: 'hello' })
     return
   }
@@ -64,54 +69,124 @@ async function handleNext() {
 <style scoped>
 .user-data-view {
   min-height: 100vh;
+  width: 100%;
+  background: var(--color-dark-bg);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 6vw;
+  gap: 6vw;
 }
+
+/* ------- BIG GRADIENT CARD ------- */
 
 .form-card {
-  width: min(480px, 100%);
-  background: linear-gradient(
-      to bottom right,
-      rgba(34, 197, 94, 0.15),
-      rgba(15, 23, 42, 0.95)
-    );
-  padding: 2rem 2.5rem;
-  border-radius: 1.5rem;
-}
+  width: 900px;
+  padding: 60px 80px;
+  border-radius: 80px;
+  border: 6px solid white;
 
-label {
+  background: linear-gradient(
+    135deg,
+    var(--color-pink-light),
+    var(--color-orange)
+  );
+
   display: flex;
   flex-direction: column;
-  margin-top: 1rem;
-  gap: 0.4rem;
+  align-items: center;
 }
 
-span {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
+.form-title {
+  color: white;
+  font-size: 56px;
+  font-weight: 100;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ------- FORM GRID ------- */
+
+.form-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  align-items: center;
+
+  padding: 16px 28px;
+  border-radius: 20px;
+  border: 3px solid white;
+
+  background: transparent;
+}
+
+.label {
+  color: white;
+  font-size: 24px;
+  font-weight: 300;
 }
 
 input {
-  padding: 0.6rem 0.8rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  background: rgba(15, 23, 42, 0.8);
-  color: var(--color-text-main);
-}
-
-.actions {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: flex-end;
-}
-
-button.primary {
+  width: 100%;
+  height: 52px;
+  border-radius: 14px;
   border: none;
-  border-radius: 999px;
-  padding: 0.6rem 1.4rem;
-  background: var(--color-primary);
-  color: #000;
-  font-weight: 600;
+
+  padding: 0 16px;
+  font-size: 22px;
+
+  background: white;
+  color: black;
 }
+
+/* ------- NEXT BUTTON (outside card) ------- */
+
+.next-btn {
+  width: 323px;
+  height: 100px;
+
+  font-size: 28px;
+  font-weight: 300;
+  margin-top: 62vh;
+  margin-right: 5vh;
+
+  border-radius: 20px;
+  border: 3px solid white;
+
+  background: linear-gradient(
+    135deg,
+    var(--color-green-dark),
+    var(--color-green-light)
+  );
+
+  color: white;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.2s ease;
+}
+
+.next-btn:hover {
+  transform: scale(1.03);
+}
+
+.next-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.next-btn:disabled:hover {
+  transform: none;
+}
+
 </style>

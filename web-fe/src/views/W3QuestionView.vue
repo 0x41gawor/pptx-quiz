@@ -1,48 +1,74 @@
 <template>
-  <div class="question-view">
+  <div class="question-view" v-if="currentQuestion">
+    <!-- LEWA STRONA: GRADIENT + PYTANIE + PROGRESS -->
     <div class="left-panel">
-      <div v-if="currentQuestion">
-        <p class="counter">
-          {{ currentIndex + 1 }} / {{ totalQuestions }}
-        </p>
-        <h2 class="question-text">
-          {{ currentQuestion.content }}
-        </h2>
+      <div class="left-inner">
+        <div class="top">
+          <p class="counter">
+            QUESTION {{ currentIndex + 1 }}/{{ totalQuestions }}
+          </p>
+          <h2 class="question-text">
+            {{ currentQuestion.content }}
+          </h2>
+        </div>
 
-        <div class="progress-bar">
-          <div class="progress-bar-fill" :style="{ width: progressPercent + '%' }"></div>
-          <span class="progress-label">
-            {{ Math.round(progressPercent) }}%
-          </span>
+        <div class="bottom">
+          <div class="progress-bar">
+            <div class="progress-bar-fill" :style="{ width: progressPercent + '%' }"></div>
+            <span class="progress-label">
+              {{ Math.round(progressPercent) }}%
+            </span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="right-panel" v-if="currentQuestion">
+    <!-- PRAWA STRONA: ODPOWIEDZI + NEXT/REPEAT -->
+    <div class="right-panel">
       <div class="answers">
-        <button
-          v-for="(answer, index) in currentQuestion.answers"
-          :key="index"
-          class="answer-button"
-          :class="answerButtonClass(index)"
-          @click="onAnswerClick(index)"
-        >
-          <span class="answer-prefix">{{ prefixLetters[index] }}</span>
-          <span class="answer-text">{{ answer.content }}</span>
-        </button>
+<button
+  v-for="(answer, index) in currentQuestion.answers"
+  :key="index"
+  class="answer-button"
+  :class="answerButtonClass(index)"
+  @click="onAnswerClick(index)"
+>
+  <!-- PREFIX: litera lub ikonka -->
+  <span class="answer-prefix" v-if="!isSelected(index)">
+    {{ prefixLetters[index] }}
+  </span>
+
+  <img
+    v-if="isSelected(index) && state === 'correct'"
+    class="status-img"
+    src="/status/correct.png"
+    alt="Correct"
+  />
+
+  <img
+    v-if="isSelected(index) && state === 'wrong'"
+    class="status-img"
+    src="/status/wrong.png"
+    alt="Wrong"
+  />
+
+  <span class="answer-text">{{ answer.content }}</span>
+</button>
+
       </div>
 
       <div class="controls" v-if="state !== 'idle'">
         <button
           v-if="state === 'correct'"
-          class="primary"
+          class="btn-next"
           @click="handleNextClick"
         >
           {{ t('quiz_next') }}
         </button>
+
         <button
           v-else
-          class="secondary"
+          class="btn-repeat"
           @click="resetSelection"
         >
           {{ t('quiz_repeat') }}
@@ -69,7 +95,7 @@ import { sendCompletionToBackend } from '@/services/completionService'
 const router = useRouter()
 const { t } = useI18n()
 
-const howMany = 10 // na razie stała; możemy później parametrYZować
+const howMany = 10
 const selectedIndex = ref<number | null>(null)
 const state = ref<'idle' | 'correct' | 'wrong'>('idle')
 
@@ -84,19 +110,25 @@ const progressPercent = computed(() => {
   return ((currentIndex.value + 1) / totalQuestions.value) * 100
 })
 
+function isSelected(index: number) {
+  return selectedIndex.value === index
+}
+
 function answerButtonClass(index: number) {
-  if (selectedIndex.value === null) return ''
-  if (index !== selectedIndex.value) return ''
+  if (!isSelected(index)) return ''
   return state.value === 'correct' ? 'answer-correct' : 'answer-wrong'
 }
 
 function onAnswerClick(index: number) {
+  if (state.value !== 'idle') return  // ⛔ BLOKADA ODPOWIEDZI
+
   if (!currentQuestion.value) return
 
   selectedIndex.value = index
   state.value =
     index === currentQuestion.value.correctIndex ? 'correct' : 'wrong'
 }
+
 
 function resetSelection() {
   selectedIndex.value = null
@@ -125,41 +157,65 @@ onMounted(async () => {
 <style scoped>
 .question-view {
   min-height: 100vh;
+  width: 100%;
   display: grid;
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 1.7fr 2fr;
 }
+
+/* LEWA KOLUMNA */
 
 .left-panel {
-  padding: 2rem;
-  background: linear-gradient(to bottom, #0f172a, #1f2937);
+  background: linear-gradient(
+    135deg,
+    var(--color-pink-light),
+    var(--color-orange)
+  );
+  display: flex;
+  align-items: stretch;
 }
 
-.right-panel {
-  padding: 2rem;
-  background: #020617;
+.left-inner {
+  padding: 40px 64px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .counter {
-  font-size: 1.2rem;
-  color: var(--color-text-muted);
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 1px;
 }
 
 .question-text {
-  margin-top: 0.75rem;
+  margin-top: 80px;
+  font-size: 36px;
+  font-weight: 600;
+  color: #ffffff;
 }
 
+/* PROGRESS BAR NA DOLE */
+
 .progress-bar {
-  margin-top: 1.5rem;
+  width: 80%;
+  height: 32px;
+  margin: 0 auto;
+  border-radius: 6px;
+  border: 2px solid #000000;
   position: relative;
-  height: 1rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.8);
   overflow: hidden;
+  background: transparent;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background: var(--color-primary);
+  background: linear-gradient(
+    135deg,
+    var(--color-pink-light),
+    var(--color-orange)
+  );
   transition: width 0.3s ease;
 }
 
@@ -169,69 +225,136 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  color: #ffffff;
+  font-weight: 600;
 }
+
+/* PRAWA KOLUMNA */
+
+.right-panel {
+  background: var(--color-dark-bg);
+  padding: 40px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* LISTA ODPOWIEDZI */
 
 .answers {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 24px;
+  margin-top: 24px;
 }
 
 .answer-button {
+  position: relative;
   width: 100%;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  padding: 0.75rem 1rem;
-  background: #020617;
-  color:aliceblue;
+  padding: 18px 32px;
+  border-radius: 32px;
+  border: 3px solid #ffffff;
+
+  background: var(--color-pink-light);
+  color: #ffffff;
+
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 24px;
   text-align: left;
+
+  font-size: 22px;
 }
+
+/* BĄBEL Z LITERĄ A/B/C/D */
 
 .answer-prefix {
-  width: 2rem;
-  height: 2rem;
+  width: 60px;
+  height: 60px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  display: inline-flex;
+  border: 2px solid #ffffff;
+  background: radial-gradient(circle at 30% 30%, #ffffff55, var(--color-pink-light));
+  display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
 }
 
+.status-img {
+  width: 80px;       /* większe niż bąbel — jak w mocku */
+  height: 80px;
+  object-fit: contain;
+  flex-shrink: 0;
+
+  margin-left: -6px; /* wyrównanie względem bąbla */
+}
+
+
+.answer-text {
+  flex: 1;
+}
+
+/* STANY PRZYCISKU ODPOWIEDZI */
+
 .answer-correct {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: var(--color-success);
+  background: linear-gradient(
+    135deg,
+    var(--color-green-dark),
+    var(--color-green-light)
+  );
 }
 
 .answer-wrong {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: var(--color-error);
+  background: linear-gradient(
+    135deg,
+    var(--color-red-dark),
+    var(--color-red-light)
+  );
 }
+
+/* PRZYCISKI NEXT / REPEAT */
 
 .controls {
-  margin-top: 1.5rem;
+  margin-top: 32px;
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
+  gap: 16px;
 }
 
-button.primary {
-  border-radius: 999px;
-  border: none;
-  padding: 0.6rem 1.4rem;
-  background: var(--color-primary);
-  color: #000;
-  font-weight: 600;
+.btn-next,
+.btn-repeat {
+  min-width: 180px;
+  height: 64px;
+  border-radius: 22px;
+  border: 3px solid #ffffff;
+
+  font-size: 24px;
+  font-weight: 300;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
 }
 
-button.secondary {
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  padding: 0.6rem 1.4rem;
-  background: transparent;
-  color: var(--color-text-main);
+.btn-next {
+  background: linear-gradient(
+    135deg,
+    var(--color-green-dark),
+    var(--color-green-light)
+  );
+}
+
+.btn-repeat {
+  background: linear-gradient(
+    135deg,
+    var(--color-blue-dark),
+    var(--color-blue-light)
+  );
 }
 </style>
