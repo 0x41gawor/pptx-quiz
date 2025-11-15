@@ -40,7 +40,12 @@ function select(lang: Language) {
 .hello-view {
   min-height: 100vh;
   width: 100%;
-  background: var(--color-dark-bg);
+
+  background: url('/backgrounds/1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
   display: flex;
   align-items: center;
   justify-content: flex-start;

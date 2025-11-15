@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from '@/i18n/lang'
 import { initializeSession } from '@/services/quizService'
@@ -42,6 +42,12 @@ const router = useRouter()
 const firstname = ref(quizSession.firstname)
 const lastname = ref(quizSession.lastname)
 const phoneNumber = ref(quizSession.phoneNumber)
+
+onMounted( () => {
+  firstname.value = ""
+  lastname.value = "" 
+  phoneNumber.value = ""
+})
 
 const isValid = computed(() =>
   firstname.value.trim().length > 0 &&
@@ -70,7 +76,10 @@ function handleNext() {
 .user-data-view {
   min-height: 100vh;
   width: 100%;
-  background: var(--color-dark-bg);
+  background: url('/backgrounds/2.png');
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -88,8 +97,8 @@ function handleNext() {
 
   background: linear-gradient(
     135deg,
-    var(--color-pink-light),
-    var(--color-orange)
+    color-mix(in srgb, var(--color-pink-light) 80%, transparent),
+    color-mix(in srgb, var(--color-orange) 80%, transparent)
   );
 
   display: flex;

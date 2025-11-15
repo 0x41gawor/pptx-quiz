@@ -2,13 +2,11 @@
   <div class="bye-view" @click="goHome">
     <div class="bye-content">
       <h1 class="bye-title">
-        THANK YOU
+        {{ t('bye_title')}}
       </h1>
 
       <p class="bye-subtitle">
-        PLEASE GO TO THE<br />
-        RECEPTION FOR FURTHER<br />
-        INSTRUCTIONS
+        {{ t('bye_subtitle')}}
       </p>
     </div>
   </div>
@@ -17,8 +15,10 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
+import { useI18n } from '@/i18n/lang'
 
 const router = useRouter()
+const { t } = useI18n()
 
 function goHome() {
   router.push({ name: 'hello' })
@@ -33,7 +33,11 @@ onMounted(() => {
 .bye-view {
   min-height: 100vh;
   width: 100%;
-  background: var(--color-dark-bg);
+
+  background: url('/backgrounds/4.png');
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
 
   display: flex;
   align-items: center;

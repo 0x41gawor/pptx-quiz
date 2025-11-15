@@ -107,7 +107,7 @@ const currentIndex = computed(() => quizSession.currentIndex)
 
 const progressPercent = computed(() => {
   if (totalQuestions.value === 0) return 0
-  return ((currentIndex.value + 1) / totalQuestions.value) * 100
+  return ((currentIndex.value) / totalQuestions.value) * 100
 })
 
 function isSelected(index: number) {
@@ -232,7 +232,10 @@ onMounted(async () => {
 /* PRAWA KOLUMNA */
 
 .right-panel {
-  background: var(--color-dark-bg);
+  background: url('/backgrounds/3.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 40px 64px;
   display: flex;
   flex-direction: column;
