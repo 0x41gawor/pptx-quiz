@@ -1,0 +1,22 @@
+:root {
+  /* tło aplikacji tabletowej */
+  --color-bg-main: #0f172a;
+  --color-bg-panel: #111827;
+
+  /* przyciski */
+  --color-primary: #22c55e;
+  --color-primary-hover: #16a34a;
+
+  /* stany odpowiedzi */
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+
+  /* tekst */
+  --color-text-main: #f9fafb;
+  --color-text-muted: #9ca3af;
+
+  /* admin panel */
+  --color-admin-bg: #f3f4f6;
+  --color-admin-card: #ffffff;
+  --color-admin-border: #e5e7eb;
+}
