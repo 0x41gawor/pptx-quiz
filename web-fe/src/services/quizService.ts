@@ -1,14 +1,7 @@
 import { quizSession } from '@/stores/quizSession'
 import type { Language } from '@/models/common'
-import type { Question, Quiz } from '@/models/quiz'
+import type { Question } from '@/models/quiz'
 import { getQuiz } from '@/api/quizApi'
-
-function mapApiToQuiz(api: Quiz): Quiz {
-  // na razie backendowy model == UI, więc tylko lekka transformacja
-  return {
-    questions: api.questions,
-  }
-}
 
 // inicjalizacja sesji po wyborze języka i danych użytkownika
 export function initializeSession(params: {

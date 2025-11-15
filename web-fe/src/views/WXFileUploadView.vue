@@ -43,6 +43,7 @@ async function handleFileChange(event: Event) {
 
   try {
     // TODO: walidacja pliku po stronie FE
+    if (!file) return;
     await uploadQuizFile(file)
     alert('Plik został wgrany')
   } catch (err) {
