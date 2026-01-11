@@ -6,6 +6,10 @@ import W3QuestionView from '@/views/W3QuestionView.vue'
 import W4ByeView from '@/views/W4ByeView.vue'
 import WXFileUploadView from '@/views/WXFileUploadView.vue'
 import WXCompletionsView from '@/views/WXCompletionsView.vue'
+import WYIVideoView from '@/views/WYVideoView.vue'
+import WYVideoEndedView from '@/views/WYVideoEndedView.vue'
+
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,15 +34,27 @@ const routes: RouteRecordRaw[] = [
   },
   // Admin area
   {
-    path: '/admin/file-upload',
+    path: '/plik',
     name: 'admin-file-upload',
     component: WXFileUploadView,
   },
   {
-    path: '/admin/completions',
+    path: '/wyniki',
     name: 'admin-completions',
     component: WXCompletionsView,
   },
+  // Video area
+  {
+  path: '/video',
+  name: 'video',
+  component: WYIVideoView,
+  },
+  {
+  path: '/video-ended',
+  name: 'video-ended',
+  component: WYVideoEndedView,
+},
+
 ]
 
 const router = createRouter({

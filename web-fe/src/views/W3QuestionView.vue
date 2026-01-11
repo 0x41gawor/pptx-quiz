@@ -5,7 +5,7 @@
       <div class="left-inner">
         <div class="top">
           <p class="counter">
-            QUESTION {{ currentIndex + 1 }}/{{ totalQuestions }}
+            {{ t('question') }} {{ currentIndex + 1 }}/{{ totalQuestions }}
           </p>
           <h2 class="question-text">
             {{ currentQuestion.content }}

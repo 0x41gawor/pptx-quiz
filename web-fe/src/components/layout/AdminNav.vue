@@ -4,8 +4,8 @@
       <span class="logo">pptx-quiz Admin</span>
     </div>
     <div class="right">
-      <RouterLink to="/admin/file-upload">Quiz file</RouterLink>
-      <RouterLink to="/admin/completions">Completions</RouterLink>
+      <RouterLink to="/plik">Plik</RouterLink>
+      <RouterLink to="/wyniki">Wyniki</RouterLink>
     </div>
   </nav>
 </template>

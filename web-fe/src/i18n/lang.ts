@@ -14,8 +14,12 @@ const messages = {
     user_data_next: 'Dalej',
     quiz_next: 'Dalej',
     quiz_repeat: 'Powtórz',
+    question: 'Pytanie',
     bye_title: 'Dziękujemy',
     bye_subtitle: 'Proszę przejść do recepcji po dalsze instrukcje',
+    video_title: 'Szkolenie Wstępne',
+    video_ended_title: 'Dziękujemy',
+    video_ended_subtitle: 'Prosimy o wypełnienie testu na tablecie',
   },
   en: {
     hello_title: 'Knowledge test',
@@ -27,8 +31,12 @@ const messages = {
     user_data_phone_number: 'Phone number',
     quiz_next: 'Next',
     quiz_repeat: 'Repeat',
+    question: 'Question',
     bye_title: 'Thank you',
     bye_subtitle: 'Please go to the reception for further instructions',
+    video_title: 'Introductory Training',
+    video_ended_title: 'Thank you',
+    video_ended_subtitle: 'Please, complete the test on the tablet',
   },
 }
 

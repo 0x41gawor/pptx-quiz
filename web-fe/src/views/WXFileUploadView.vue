@@ -3,7 +3,7 @@
     <AdminNav />
 
     <div class="admin-content">
-      <h1>Quiz file</h1>
+      <h1>Plik z pytaniami</h1>
       <div class="actions">
         <button @click="handleDownload">Podgląd pliku</button>
 
@@ -82,5 +82,8 @@ button,
   border: 1px solid var(--color-admin-border);
   background: #fff;
   padding: 0.5rem 1rem;
+}
+.upload-label {
+  cursor: pointer;
 }
 </style>

@@ -24,3 +24,16 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* GLOBAL DISABLE OF SELECTION & TOUCH HIGHLIGHTS */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  outline: none;
+  -webkit-user-drag: none;
+}

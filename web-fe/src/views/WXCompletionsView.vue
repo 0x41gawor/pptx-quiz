@@ -3,7 +3,7 @@
     <AdminNav />
 
     <div class="admin-content">
-      <h1>Completions</h1>
+      <h1>Wyniki</h1>
 
       <div class="toolbar">
         <input
