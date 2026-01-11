@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Sprawdź, czy zmienne środowiskowe są ustawione
-if [[ -z "$NOME" || -z "$AGANDSKODE" ]]; then
-  echo "Musisz ustawić zmienne środowiskowe NOME i AGANDSKODE."
+if [[ -z "$NOME" || -z "$AGANDSKODE" || -z "$PRISTAV" ]]; then
+  echo "Musisz ustawić zmienne środowiskowe NOME, AGANDSKODE i PRISTAV."
   echo "   Przykład:"
   echo "     export NOME=dietonez"
   echo "     export AGANDSKODE=sekretnehaslo"
+  echo "     export PRISTAV=5432"
   exit 1
 fi
 

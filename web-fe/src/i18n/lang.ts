@@ -19,7 +19,7 @@ const messages = {
     bye_subtitle: 'Proszę przejść do recepcji po dalsze instrukcje',
     video_title: 'Szkolenie Wstępne',
     video_ended_title: 'Dziękujemy',
-    video_ended_subtitle: 'Prosimy o wypełnienie testu na tablecie',
+    video_ended_subtitle: 'Prosimy o wypełnienie testu na tablecie.',
   },
   en: {
     hello_title: 'Knowledge test',
@@ -36,7 +36,7 @@ const messages = {
     bye_subtitle: 'Please go to the reception for further instructions',
     video_title: 'Introductory Training',
     video_ended_title: 'Thank you',
-    video_ended_subtitle: 'Please, complete the test on the tablet',
+    video_ended_subtitle: 'Please complete the test on the tablet.',
   },
 }
 

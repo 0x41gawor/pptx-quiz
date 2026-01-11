@@ -10,7 +10,6 @@ import WYIVideoView from '@/views/WYVideoView.vue'
 import WYVideoEndedView from '@/views/WYVideoEndedView.vue'
 
 
-
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -34,8 +33,13 @@ const routes: RouteRecordRaw[] = [
   },
   // Admin area
   {
+    path: '/admin',
+    name: 'admin',
+    component: WXCompletionsView,
+  },
+  {
     path: '/plik',
-    name: 'admin-file-upload',
+    name: 'admin-file',
     component: WXFileUploadView,
   },
   {
